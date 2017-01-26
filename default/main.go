@@ -43,7 +43,7 @@ func init() {
 
 func PutWorktime(c web.C, w http.ResponseWriter, r *http.Request) {
 	g := goon.NewGoon(r)
-	post := Post{Id: "abc", Title: "タイトル", Body: "本文です"}
+	post := Post{Id: "abc", Title: "タイトル", Body: "本文です.."}
 	//post := Post{Title: "タイトル", Body: "本文です..."}
 	//g.Put(&post)
 	if _, err := g.Put(&post); err != nil {
