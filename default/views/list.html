@@ -1,7 +1,19 @@
-      <!--Import jQuery before materialize.js-->
-      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-      <script type="text/javascript" src="js/materialize.min.js"></script>
-      <a class="waves-effect waves-light btn">button</a>
-<a class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>button</a>
-<a class="waves-effect waves-light btn"><i class="material-icons right">cloud</i>button</a>
-        
+{{ define "content" }}
+    <div class="row">
+      <div class="col s12">
+        <nav>
+          <div class="nav-wrapper">
+            <form>
+              <div class="input-field">
+                <input id="search" type="search" required>
+                  <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                  <i class="material-icons">close</i>
+              </div>
+            </form>
+          </div>
+        </nav>
+      </div>
+      <div class="col s6">This div is 6-columns wide</div>
+      <div class="col s6"><a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a></div>
+    </div>
+{{ end }}
