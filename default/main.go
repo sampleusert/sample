@@ -39,6 +39,20 @@ func init() {
 	http.Handle("/goon", goji.DefaultMux)
 	goji.Get("/goon", PutWorktime)
 
+	http.Handle("/list", goji.DefaultMux)
+	goji.Get("/list", list)
+
+	//http.Handle("/css", http.FileServer(http.Dir("/css")))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))
+	http.Handle("/fonts/", http.StripPrefix("/fonts/", http.FileServer(http.Dir("fonts"))))
+}
+
+func list(c web.C, w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{
+		"Name": "home",
+	}
+	render("views/list.html", w, data)
 }
 
 func PutWorktime(c web.C, w http.ResponseWriter, r *http.Request) {
