@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/mjibson/goon"
 	"github.com/zenazn/goji/web"
 	"google.golang.org/appengine/log"
 	"net/http"
+	"time"
 )
 
 /*type Status struct {
@@ -28,15 +30,18 @@ func titleCreate(w http.ResponseWriter, r *http.Request) {
 	log.Infof(ctx, "Index")
 	//fmt.Fprintf(w, "okok")
 
-	/*status := Status{"Alex", []string{"snowboarding", "programming"}}
-	js, err := json.Marshal(status)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	//シーケンスにしたい
+
+	g := goon.NewGoon(r)
+	title := Title{Id: r.FormValue("input_text"), Name: r.FormValue("input_text"), Propose: r.FormValue("textarea1"), User: "test", Update: time.Now()}
+	//post := Post{Title: "タイトル", Body: "本文です..."}
+
+	//g.Put(&post)
+	if _, err := g.Put(&title); err != nil {
+		u := Status{Id: "ng", Balance: "ng"}
+		json.NewEncoder(w).Encode(u)
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)*/
 
 	name := r.FormValue("input_text")
 	info := r.FormValue("textarea1")

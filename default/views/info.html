@@ -1,0 +1,32 @@
+{{ define "content" }}
+<script>
+  $(document).ready(function(){
+    Materialize.toast('Created', 3000, 'rounded');
+  });
+</script>
+<ul class="collapsible" data-collapsible="accordion">
+    <li>
+      <div class="collapsible-header"><i class="material-icons"></i>{{.Name}}</div>
+      <div class="collapsible-body"><span>{{.Propose}}</span></div>
+    </li>
+</ul>
+<div class="row">
+  <form class="col s12">
+  <hidden id="titleId" value="{{.Id}}">
+
+          <div class="input-field col s12 m8 l10">
+            <textarea id="comment" class="materialize-textarea" data-length="120"></textarea>
+            <label for="comment">comment</label>
+          </div>
+          <div class="col s12 m4 l2">
+            <a class="waves-effect btn" href="javascript:sendComment();">submit</a>
+          </div>
+  </from>
+</div>
+<div class="collection">
+    <a href="#!" class="collection-item"><span class="badge">{{.Update}}</span><div class="chip">Jane Doe</div>fjakljlk;jflka;jfklafjl;ajflajf;ljlf;ja;fjafja;lfjka;fasfa</a>
+    <a href="#!" class="collection-item"><span class="new badge">4</span>Alan</a>
+    <a href="#!" class="collection-item">Alan</a>
+    <a href="#!" class="collection-item"><span class="badge">14</span>Alan</a>
+</div>
+{{ end }}

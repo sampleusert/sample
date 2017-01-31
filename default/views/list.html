@@ -13,7 +13,26 @@
           </div>
         </nav>
       </div>
-      <div class="col s6">This div is 6-columns wide</div>
-      <div class="col s6"><a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a></div>
+      <div class="col s6">test</div>
+      <div class="col s6 right-align"><a href="/title" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a></div>
     </div>
+<table class="highlight">
+        <thead>
+          <tr>
+              <th data-field="id"><div class="card-panel deep-purple lighten-2" style="color: rgba(255, 255, 255, 0.901961);">Title</div></th>
+              <th data-field="name">Propose</th>
+              <th data-field="price">Creater</th>
+          </tr>
+        </thead>
+
+        <tbody>
+{{range .}}
+          <tr titleVal="{{.Id}}">
+            <td>{{.Name}}</td>
+            <td>{{.Propose}}</td>
+            <td>{{.User}}</td>
+          </tr>
+{{end}}
+        </tbody>
+      </table>
 {{ end }}
