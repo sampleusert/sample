@@ -10,6 +10,8 @@ import (
 	"html/template"
 	"net/http"
 	//"strconv"
+	"encoding/json"
+	"time"
 )
 
 func info(c web.C, w http.ResponseWriter, r *http.Request) {
@@ -35,16 +37,16 @@ func comment(w http.ResponseWriter, r *http.Request) {
 
 	//シーケンスにしたい
 
-	//g := goon.NewGoon(r)
-	//title := Title{Id: r.FormValue("input_text"), Name: r.FormValue("input_text"), Propose: r.FormValue("textarea1"), User: "test", Update: time.Now()}
+	g := goon.NewGoon(r)
+	comment := Comment{Id: "abc", TitleId: r.FormValue("titleId"), Comment: r.FormValue("comment"), User: "test", Update: time.Now()}
 	//post := Post{Title: "タイトル", Body: "本文です..."}
 
 	//g.Put(&post)
-	/*if _, err := g.Put(&title); err != nil {
+	if _, err := g.Put(&comment); err != nil {
 		u := Status{Id: "ng", Balance: "ng"}
 		json.NewEncoder(w).Encode(u)
 		return
-	}*/
+	}
 
 	name := r.FormValue("titleId")
 	info := r.FormValue("comment")

@@ -23,3 +23,11 @@ type Title struct {
 	User    string
 	Update  time.Time
 }
+
+type Comment struct {
+	Id      string `datastore:"-" goon:"id"`
+	TitleId string
+	Comment string
+	User    string
+	Update  time.Time
+}

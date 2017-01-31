@@ -43,7 +43,8 @@ var sendComment = function() {
     //context: domobject
   }).done(function(response, textStatus, jqXHR) {
     // 成功時処理
-    //レスポンスデータはパースされた上でresponseに渡される
+    Materialize.toast('done', 3000, 'rounded');
+    $("#comment").val("");
   }).fail(function(jqXHR, textStatus, errorThrown ) {
     // 失敗時処理
   }).always(function(data_or_jqXHR, textStatus, jqXHR_or_errorThrown) {

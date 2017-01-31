@@ -12,10 +12,10 @@
 </ul>
 <div class="row">
   <form class="col s12">
-  <hidden id="titleId" value="{{.Id}}">
+  <input type="hidden" name="titleId" value="{{.Id}}">
 
           <div class="input-field col s12 m8 l10">
-            <textarea id="comment" class="materialize-textarea" data-length="120"></textarea>
+            <textarea id="comment" class="materialize-textarea" data-length="120" name="comment"></textarea>
             <label for="comment">comment</label>
           </div>
           <div class="col s12 m4 l2">
