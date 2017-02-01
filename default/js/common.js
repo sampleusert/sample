@@ -14,6 +14,39 @@ $('#titleok').click(function(){
     alert("abc");
 });
 
+var commentList = function() {
+    $.ajax({
+    type: 'GET',
+    url: '/commentList',
+    timeout: 10000,
+    cache: false,
+    /*data: {
+      'param1': 'ほげ',
+      'foo': 'データ'
+    },*/
+    data: $("form").serialize(),
+    dataType: 'json',
+    beforeSend: function(jqXHR) {
+      // falseを返すと処理を中断
+      return true;
+    }//,
+  }).done(function(response, textStatus, jqXHR) {
+    $('#more').remove();
+    var obj = response.Comment;
+    for (var i=0; i<obj.length; i++) {
+      //console.log(obj[i].Comment);
+      $('.collection').append('<a href="#!" class="collection-item"><span class="badge">' + obj[i].Update +'</span><div class="chip">' + obj[i].User + '</div>' + obj[i].Comment +'</a>');
+    }
+    // もっと見る
+    $('.collection').append('<a href="javascript:commentList();" class="collection-item" id="more">もっと見る</a>');
+
+  }).fail(function(jqXHR, textStatus, errorThrown ) {
+    // 失敗時処理
+  }).always(function(data_or_jqXHR, textStatus, jqXHR_or_errorThrown) {
+    // doneまたはfail実行後の共通処理
+  });
+}
+
 var sendComment = function() {
   // exsits bug
   /*var lang = '';

@@ -11,6 +11,8 @@ import (
 	"net/http"
 	//"strconv"
 	"encoding/json"
+	"google.golang.org/appengine/memcache"
+	//"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
 	"time"
 )
@@ -57,30 +59,57 @@ func comment(w http.ResponseWriter, r *http.Request) {
 
 func commentList(w http.ResponseWriter, r *http.Request) {
 
-	comments := make([]Comment, 0)
-	//cc := appengine.NewContext(r)
-	q := datastore.NewQuery("Comment")
-	/*count, err := q.Count(cc)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}*/
+	//comments := make([]Comment, 0)
 
-	//commentViews := make([]Comment, count)
-
+	//gneral
+	/*q := datastore.NewQuery("Comment")
 	g := goon.NewGoon(r)
-	g.GetAll(q, &comments)
-
-	var s CommentList
+	g.GetAll(q, &comments)*/
+	/*var s CommentList
 	for _, comment := range comments {
 		//commentViews[pos].Id = comment.Id
 		//commentViews[pos].Comment = comment.Comment
 		s.Comment = append(s.Comment, comment)
+	}*/
+
+	ctx := newContext(r)
+	q := datastore.NewQuery("Comment").Limit(2)
+	g := goon.NewGoon(r)
+
+	// If the application stored a cursor during a previous request, use it.
+	item, err := memcache.Get(ctx, "person_cursor")
+	if err == nil {
+		cursor, err := datastore.DecodeCursor(string(item.Value))
+		if err == nil {
+			q = q.Start(cursor)
+		}
 	}
-	//json.NewDecoder(r).Decode(&commentViews)
-	//json.Unmarshal([]byte(commentViews), &s)
-	//fmt.Println(s)
-	//b, _ := json.Marshal(s)
+
+	// Iterate over the results.
+	t := g.Run(q)
+	var s CommentList
+	for {
+		var p Comment
+		_, err := t.Next(&p)
+		if err == datastore.Done {
+			break
+		}
+		s.Comment = append(s.Comment, p)
+		if err != nil {
+			log.Errorf(ctx, "fetching next Person: %v", err)
+			break
+		}
+		// Do something with the Person p
+	}
+
+	// Get updated cursor and store it for next time.
+	if cursor, err := t.Cursor(); err == nil {
+		memcache.Set(ctx, &memcache.Item{
+			Key:   "person_cursor",
+			Value: []byte(cursor.String()),
+		})
+	}
+
 	json.NewEncoder(w).Encode(s)
 	//fmt.Println(string(b))
 

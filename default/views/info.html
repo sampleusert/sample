@@ -1,7 +1,16 @@
 {{ define "content" }}
 <script>
+/*var options = [
+      {selector: '#abcde', offset: 50, callback: function(el) {
+        Materialize.toast("This is our ScrollFire Demo!", 1500 );
+      } },
+      {selector: '#abcde', offset: 500, callback: function(el) {
+        Materialize.toast("Please continue scrolling!", 1500 );
+      } }  ];*/
   $(document).ready(function(){
     Materialize.toast('Created', 3000, 'rounded');
+    commentList();
+    //Materialize.scrollFire(options);
   });
 </script>
 <ul class="collapsible" data-collapsible="accordion">
@@ -23,7 +32,8 @@
           </div>
   </from>
 </div>
-<div class="col s12 center">
+<div class="collection">
+<div class="col s12 center" id="circle">
 <div class="preloader-wrapper big active center-align">
     <div class="spinner-layer spinner-blue-only">
       <div class="circle-clipper left">
@@ -36,10 +46,6 @@
     </div>
   </div>
 </div>
-<div class="collection">
-    <a href="#!" class="collection-item"><span class="badge">{{.Update}}</span><div class="chip">Jane Doe</div>fjakljlk;jflka;jfklafjl;ajflajf;ljlf;ja;fjafja;lfjka;fasfa</a>
-    <a href="#!" class="collection-item"><span class="new badge">4</span>Alan</a>
-    <a href="#!" class="collection-item">Alan</a>
-    <a href="#!" class="collection-item"><span class="badge">14</span>Alan</a>
+<!--    <a href="#!" class="collection-item"><span class="badge">{{.Update}}</span><div class="chip">Jane Doe</div>fjakljlk;jflka;jfklafjl;ajflajf;ljlf;ja;fjafja;lfjka;fasfa</a> -->
 </div>
 {{ end }}
