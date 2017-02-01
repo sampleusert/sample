@@ -4,6 +4,15 @@ import (
 	"time"
 )
 
+type Server struct {
+	ServerName string
+	ServerIP   string
+}
+
+type Serverslice struct {
+	Servers []Server
+}
+
 type User struct {
 	Name     string
 	Role     string
@@ -30,4 +39,8 @@ type Comment struct {
 	Comment string
 	User    string
 	Update  time.Time
+}
+
+type CommentList struct {
+	Comment []Comment
 }
