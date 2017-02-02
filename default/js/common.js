@@ -39,16 +39,22 @@ var searchList = function() {
       return true;
     }//,
   }).done(function(response, textStatus, jqXHR) {
-    /*if (response.Comment != null) {
+    $('tr[titleVal]').remove();
+    if (response.Comment != null) {
       var obj = response.Comment;
       for (var i=0; i<obj.length; i++) {
         //console.log(obj[i].Comment);
-        $('.collection').append('<a href="#!" class="collection-item"><span class="badge">' + obj[i].Update +'</span><div class="chip">' + obj[i].User + '</div>' + obj[i].Comment +'</a>');
+        $('#dataList').append('<tr titleVal="'+ obj[i].TitleId + '"><td colspan=3>' + obj[i].Comment + '</td></tr>');
       }
-      // もっと見る
-      $('.collection').append('<a href="javascript:commentList();" class="collection-item" id="more">もっと見る</a>');
       
-    }*/
+      $('table tr').click(function() {
+        location.href = "/info?id=" + $(this).attr("titleVal");
+      });
+
+      // もっと見る
+      //$('.collection').append('<a href="javascript:commentList();" class="collection-item" id="more">もっと見る</a>');
+      
+    }
 
   }).fail(function(jqXHR, textStatus, errorThrown ) {
     // 失敗時処理
