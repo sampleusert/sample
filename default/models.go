@@ -41,6 +41,19 @@ type Comment struct {
 	Update  time.Time
 }
 
+// for search
+type CommentForSerh struct {
+	TitleId string
+	Comment string
+	User    string
+	//Update  time.Time
+}
+
 type CommentList struct {
-	Comment []Comment
+	Comment   []Comment
+	CursorKey string
+}
+type CommentForSerhList struct {
+	Comment   []CommentForSerh
+	CursorKey string
 }

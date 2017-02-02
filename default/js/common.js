@@ -1,4 +1,14 @@
 $(document).ready(function(){
+  
+    $("input:not(.allow_submit)").on("keypress", function(event){
+      return event.which !== 13;
+    });
+    $('#searchTxt').keypress( function ( e ) {
+    	if ( e.which == 13 ) {
+		    searchList();
+	    }
+    });    
+
     $(".modal").modal();
     $('.collapsible').collapsible();
     $(".button-collapse").sideNav();
@@ -14,17 +24,49 @@ $('#titleok').click(function(){
     alert("abc");
 });
 
+var searchList = function() {
+    $.ajax({
+    type: 'GET',
+    url: '/search',
+    timeout: 10000,
+    cache: false,
+    data: {
+      'searchTxt': $('#searchTxt').val(),
+    },
+    dataType: 'json',
+    beforeSend: function(jqXHR) {
+      // falseを返すと処理を中断
+      return true;
+    }//,
+  }).done(function(response, textStatus, jqXHR) {
+    /*if (response.Comment != null) {
+      var obj = response.Comment;
+      for (var i=0; i<obj.length; i++) {
+        //console.log(obj[i].Comment);
+        $('.collection').append('<a href="#!" class="collection-item"><span class="badge">' + obj[i].Update +'</span><div class="chip">' + obj[i].User + '</div>' + obj[i].Comment +'</a>');
+      }
+      // もっと見る
+      $('.collection').append('<a href="javascript:commentList();" class="collection-item" id="more">もっと見る</a>');
+      
+    }*/
+
+  }).fail(function(jqXHR, textStatus, errorThrown ) {
+    // 失敗時処理
+  }).always(function(data_or_jqXHR, textStatus, jqXHR_or_errorThrown) {
+    // doneまたはfail実行後の共通処理
+  });
+}
 var commentList = function() {
     $.ajax({
     type: 'GET',
     url: '/commentList',
     timeout: 10000,
     cache: false,
-    /*data: {
-      'param1': 'ほげ',
+    data: {
+      'cursorkey': $('#cursorkey').val(),
       'foo': 'データ'
-    },*/
-    data: $("form").serialize(),
+    },
+    //data: $("form").serialize(),
     dataType: 'json',
     beforeSend: function(jqXHR) {
       // falseを返すと処理を中断
@@ -32,13 +74,20 @@ var commentList = function() {
     }//,
   }).done(function(response, textStatus, jqXHR) {
     $('#more').remove();
-    var obj = response.Comment;
-    for (var i=0; i<obj.length; i++) {
-      //console.log(obj[i].Comment);
-      $('.collection').append('<a href="#!" class="collection-item"><span class="badge">' + obj[i].Update +'</span><div class="chip">' + obj[i].User + '</div>' + obj[i].Comment +'</a>');
+    console.log(response.CursorKey);
+    $('#cursorkey').val(response.CursorKey);
+    console.log($('#cursorkey').val());
+    
+    if (response.Comment != null) {
+      var obj = response.Comment;
+      for (var i=0; i<obj.length; i++) {
+        //console.log(obj[i].Comment);
+        $('.collection').append('<a href="#!" class="collection-item"><span class="badge">' + obj[i].Update +'</span><div class="chip">' + obj[i].User + '</div>' + obj[i].Comment +'</a>');
+      }
+      // もっと見る
+      $('.collection').append('<a href="javascript:commentList();" class="collection-item" id="more">もっと見る</a>');
+      
     }
-    // もっと見る
-    $('.collection').append('<a href="javascript:commentList();" class="collection-item" id="more">もっと見る</a>');
 
   }).fail(function(jqXHR, textStatus, errorThrown ) {
     // 失敗時処理

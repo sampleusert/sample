@@ -1,11 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/mjibson/goon"
 	"github.com/zenazn/goji/web"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/search"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -57,4 +59,34 @@ func list(c web.C, w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("views/layout.html", "views/list.html"))
 	tmpl.Execute(w, titlesViews)
 
+}
+
+func searchMed(w http.ResponseWriter, r *http.Request) {
+	ctx := newContext(r)
+	log.Infof(ctx, "Index")
+
+	// searchAPI
+	index, err := search.Open("comment")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	var s CommentForSerhList
+
+	for t := index.Search(ctx, "Comment="+r.FormValue("searchTxt"), nil); ; {
+		var comment CommentForSerh
+		_, err := t.Next(&comment)
+		if err == search.Done {
+			break
+		}
+		s.Comment = append(s.Comment, comment)
+
+		/*if err != nil {
+		          fmt.Fprintf(w, "Search error: %v\n", err)
+		          break
+		  }
+		  fmt.Fprintf(w, "%s -> %#v\n", id, doc)*/
+
+	}
+	json.NewEncoder(w).Encode(s)
 }

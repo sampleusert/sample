@@ -11,9 +11,10 @@ import (
 	"net/http"
 	//"strconv"
 	"encoding/json"
-	"google.golang.org/appengine/memcache"
+	//"google.golang.org/appengine/memcache"
 	//"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/search"
 	"time"
 )
 
@@ -36,18 +37,31 @@ func info(c web.C, w http.ResponseWriter, r *http.Request) {
 func comment(w http.ResponseWriter, r *http.Request) {
 	ctx := newContext(r)
 	log.Infof(ctx, "Index")
-	//fmt.Fprintf(w, "okok")
 
 	//シーケンスにしたい
+	id := "a" + time.Now().String()
 
 	g := goon.NewGoon(r)
-	comment := Comment{Id: time.Now().String(), TitleId: r.FormValue("titleId"), Comment: r.FormValue("comment"), User: "test", Update: time.Now()}
+	comment := Comment{Id: id, TitleId: r.FormValue("titleId"), Comment: r.FormValue("comment"), User: "test", Update: time.Now()}
 	//post := Post{Title: "タイトル", Body: "本文です..."}
 
 	//g.Put(&post)
 	if _, err := g.Put(&comment); err != nil {
 		u := Status{Id: "ng", Balance: "ng"}
 		json.NewEncoder(w).Encode(u)
+		return
+	}
+
+	// searchAPI
+	index, err := search.Open("comment")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	_, err = index.Put(ctx, "test", &CommentForSerh{TitleId: r.FormValue("titleId"), Comment: r.FormValue("comment"), User: "test"})
+	//_, err = index.Put(ctx, "test", comment)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -77,13 +91,17 @@ func commentList(w http.ResponseWriter, r *http.Request) {
 	g := goon.NewGoon(r)
 
 	// If the application stored a cursor during a previous request, use it.
-	item, err := memcache.Get(ctx, "person_cursor")
+	//item, err := memcache.Get(ctx, "person_cursor")
+	item := r.FormValue("cursorkey")
+
+	log.Infof(ctx, item)
+
+	//if err == nil {
+	cursor, err := datastore.DecodeCursor(item)
 	if err == nil {
-		cursor, err := datastore.DecodeCursor(string(item.Value))
-		if err == nil {
-			q = q.Start(cursor)
-		}
+		q = q.Start(cursor)
 	}
+	//}
 
 	// Iterate over the results.
 	t := g.Run(q)
@@ -104,10 +122,11 @@ func commentList(w http.ResponseWriter, r *http.Request) {
 
 	// Get updated cursor and store it for next time.
 	if cursor, err := t.Cursor(); err == nil {
-		memcache.Set(ctx, &memcache.Item{
+		/*memcache.Set(ctx, &memcache.Item{
 			Key:   "person_cursor",
 			Value: []byte(cursor.String()),
-		})
+		})*/
+		s.CursorKey = cursor.String()
 	}
 
 	json.NewEncoder(w).Encode(s)

@@ -52,6 +52,8 @@ func init() {
 	goji.Get("/comment", comment)
 	http.Handle("/commentList", goji.DefaultMux)
 	goji.Get("/commentList", commentList)
+	http.Handle("/search", goji.DefaultMux)
+	goji.Get("/search", searchMed)
 
 	//http.Handle("/css", http.FileServer(http.Dir("/css")))
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
