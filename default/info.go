@@ -6,15 +6,16 @@ import (
 	"github.com/zenazn/goji/web"
 	//"google.golang.org/appengine"
 	//"google.golang.org/appengine/datastore"
+	"encoding/json"
 	"google.golang.org/appengine/log"
 	"html/template"
 	"net/http"
-	//"strconv"
-	"encoding/json"
+	"strconv"
 	//"google.golang.org/appengine/memcache"
 	//"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/search"
+	"math/rand"
 	"time"
 )
 
@@ -39,7 +40,8 @@ func comment(w http.ResponseWriter, r *http.Request) {
 	log.Infof(ctx, "Index")
 
 	//シーケンスにしたい
-	id := "a" + time.Now().String()
+	rand.Seed(time.Now().UnixNano())
+	id := strconv.Itoa(rand.Intn(1000000))
 
 	g := goon.NewGoon(r)
 	comment := Comment{Id: id, TitleId: r.FormValue("titleId"), Comment: r.FormValue("comment"), User: "test", Update: time.Now()}
@@ -58,7 +60,7 @@ func comment(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	_, err = index.Put(ctx, "test", &CommentForSerh{TitleId: r.FormValue("titleId"), Comment: r.FormValue("comment"), User: "test"})
+	_, err = index.Put(ctx, id, &CommentForSerh{TitleId: r.FormValue("titleId"), Comment: r.FormValue("comment"), User: "test"})
 	//_, err = index.Put(ctx, "test", comment)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
